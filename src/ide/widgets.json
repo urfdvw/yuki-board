@@ -1,0 +1,24 @@
+[
+  {
+    "id": 0,
+    "widgetType": "Set",
+    "variableName": "macro",
+    "x": 30,
+    "y": 30,
+    "type": "string"
+  },
+  {
+    "id": 1,
+    "widgetType": "Display",
+    "variableName": "macro",
+    "x": 279,
+    "y": 30
+  },
+  {
+    "id": 2,
+    "widgetType": "Display",
+    "x": 279,
+    "y": 234,
+    "variableName": "status"
+  }
+]
