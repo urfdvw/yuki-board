@@ -8,11 +8,25 @@ import adafruit_mpr121
 def get_raw_values(mpr121):
     return [mpr121[i].raw_value for i in range(12)]
     
+init_raw_value = [141, 190, 195, 156, 219, 297, 304, 293, 147, 187, 179, 124]
+threshold = 5
+order = { # pin: number
+    11: 1,
+    7: 2,
+    3: 3,
+    10: 4,
+    6: 5,
+    2: 6,
+    9: 7,
+    5: 8,
+    1: 9,
+    8: 11,
+    4: 0,
+    0: 12
+}
 def get_touched(mpr121):
-    init_raw_value = [141, 190, 195, 156, 219, 297, 304, 293, 147, 187, 179, 124]
-    threshold = 5
     return [ 
-        i
+        order[i]
         for i, raw in enumerate(get_raw_values(mpr121))
         if init_raw_value[i] - raw > threshold
     ]
