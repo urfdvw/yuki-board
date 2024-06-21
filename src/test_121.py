@@ -31,6 +31,9 @@ position = {
     0: (2.0, 3.0),
 }
 
+def centered_mod(a, center, mod):
+    return (a - center + 0.5 * mod) % mod + center - 0.5 * mod
+
 
 class Timer:
     """
@@ -246,9 +249,8 @@ class TouchBarPhysics:
             else:
                 tempered_weight = [twi / sum_tw for twi in tempered_weight]
                 # computer weighted sum
-                # TODO: weighted sum should consider mod
-                self.x.now = sum([tempered_weight[i] * self.pos_x[i] for i in range(self.N)])
-                self.y.now = sum([tempered_weight[i] * self.pos_y[i] for i in range(self.N)])
+                self.x.now = sum([tempered_weight[i] * centered_mod(self.pos_x[i], self.x.now, 3) for i in range(self.N)]) % 3
+                self.y.now = sum([tempered_weight[i] * centered_mod(self.pos_y[i], self.y.now, 4) for i in range(self.N)]) % 4
 
         return Dict2Obj(
             {
@@ -266,6 +268,6 @@ tp = TouchBarPhysics(
 )
 while True:
     value = tp.get()
-    if value.z > 0.2:
+    if value.z > 0.3:
         print(value.x, value.y)
     sleep(0.1)
