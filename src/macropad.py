@@ -1,3 +1,6 @@
+"""
+MacroHID
+"""
 # python native
 from time import monotonic, sleep
 # hid libs
@@ -7,21 +10,8 @@ from adafruit_hid.keycode import Keycode
 from adafruit_hid.consumer_control import ConsumerControl
 from adafruit_hid.consumer_control_code import ConsumerControlCode
 from adafruit_hid.mouse import Mouse
-# from adafruit_hid.gamepad import Gamepad
-
-class Limit:
-    def __init__(self, lower, upper):
-        self.lower = lower
-        self.upper = upper
-    def __call__(self, val):
-        if val > self.upper:
-            return self.upper
-        if val < self.lower:
-            return self.lower
-        return val
-limit = Limit(-127, 127)
         
-class MacroPad:
+class MacroHID:
     def __init__(
         self,
         hid,
@@ -30,9 +20,6 @@ class MacroPad:
         self.keyboard_layout = KeyboardLayoutUS(self.keyboard)
         self.consumer_control = ConsumerControl(hid.devices)
         self.mouse = Mouse(hid.devices)
-        # self.gamepad = Gamepad(hid.devices)
-        
-        # self.gamepad_states = [0 for i in range(4)]
         
         self.cur_macro = ''
 
@@ -46,31 +33,6 @@ class MacroPad:
         elif code.startswith('MOUSE_MOVE'):
             x, y, w = [int(axis) for axis in code.split('_')[-3:]]
             self.mouse.move(x=x,y=y,wheel=w)
-        # elif code.startswith('GAMEPAD_BUTTON'):
-        #     n = int(code.split('_')[-1])
-        #     self.gamepad.press_buttons(n)
-        # elif code.startswith('JOY_ALTER'):
-        #     alter = [int(axis) for axis in code.split('_')[-4:]]
-        #     self.gamepad_states = [
-        #         alter[i] + self.gamepad_states[i]
-        #         for i in range(4)
-        #     ]
-        #     self.gamepad.move_joysticks(*[
-        #         limit(s)
-        #         for s in self.gamepad_states
-        #     ])
-        # elif code.startswith('JOY_SET'):
-        #     self.gamepad_states = [
-        #         int(axis) if int(axis) else self.gamepad_states[i]
-        #         for i, axis in enumerate(code.split('_')[-4:])
-        #     ]
-        #     self.gamepad.move_joysticks(*[
-        #         limit(s)
-        #         for s in self.gamepad_states
-        #     ])
-        # elif code == 'JOY_CENTER':
-        #     self.gamepad_states = [0, 0, 0, 0]
-        #     self.gamepad.move_joysticks(*self.gamepad_states)
         elif code.startswith('WAIT'):
             ms = int(code.split('_')[-1])
             sleep(ms / 1000)
@@ -86,21 +48,7 @@ class MacroPad:
             self.consumer_control.release()
         elif code in Mouse.__dict__:
             self.mouse.release(Mouse.__dict__[code])
-        # elif code.startswith('GAMEPAD_BUTTON'):
-        #     n = int(code.split('_')[-1])
-        #     self.gamepad.release_buttons(n)
-        # elif code.startswith('JOY_SET'):
-        #     print(self.gamepad_states)
-        #     if self.n_key_press == 0:
-        #         self.gamepad_states = [
-        #             0 if int(axis) else self.gamepad_states[i]
-        #             for i, axis in enumerate(code.split('_')[-4:])
-        #         ]
-        #     self.gamepad.move_joysticks(*[
-        #         limit(s)
-        #         for s in self.gamepad_states
-        #     ])
-
+            
     def press_hotkey(self, hotkey):
         if len(hotkey[0]) == 0:
             return

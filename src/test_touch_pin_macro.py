@@ -6,7 +6,7 @@ import board
 import touchio
 import busio
 import usb_hid
-from macropad import MacroPad
+from macropad import MacroHID
 from connected_variables import ConnectedVariables
 cv = ConnectedVariables()
 
@@ -25,8 +25,8 @@ while True:
     except Exception as e:
         print(e)
         pass
-# define macropad
-macropad = MacroPad(
+# define macro_hid
+macro_hid = MacroHID(
     hid=hid
 )
 
@@ -43,7 +43,7 @@ while True:
                 if touch_pin.value:
                     break
             cv.write('status', "Running macro")
-            macropad(cv.read('macro'))
+            macro_hid(cv.read('macro'))
             cv.write('status', "Done running macro, ready")
         except Exception as e:
             print(e)
