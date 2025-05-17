@@ -6,7 +6,7 @@ import board
 import touchio
 import busio
 import usb_hid
-from macropad import MacroHID
+from macrohid import MacroHID
 from connected_variables import ConnectedVariables
 cv = ConnectedVariables()
 
